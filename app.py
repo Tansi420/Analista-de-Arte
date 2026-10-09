@@ -7,105 +7,103 @@ from openai import OpenAI
 def encode_image(image_file):
     return base64.b64encode(image_file.getvalue()).decode("utf-8")
 
-# Streamlit page setup with centered artistic layout
+# Streamlit page setup with curated gallery layout
 st.set_page_config(
-    page_title="Atelier Visual | Curaduría y Análisis", 
+    page_title="GalleryCritique - Curador de Arte y Diseño", 
     page_icon="🎨", 
     layout="centered", 
     initial_sidebar_state="collapsed"
 )
 
-# Custom CSS for an artistic, gallery-style aesthetic (NO font changes)
+# Custom CSS for an artistic, editorial, and gallery-like aesthetic (NO font changes)
 st.markdown("""
     <style>
-        /* Main dark artistic canvas background */
+        /* Main background - warm editorial dark tone */
         .stApp {
-            background-color: #0c0a09;
-            color: #f5f5f4;
+            background-color: #121110;
+            color: #E6E2DD;
         }
         
-        /* Artistic Header Banner */
-        .art-header {
-            background: linear-gradient(145deg, #1c1917 0%, #0c0a09 100%);
-            padding: 2.5rem 2rem;
-            border-radius: 16px;
-            border: 1px solid rgba(245, 245, 244, 0.08);
-            text-align: center;
+        /* Artistic Card Wrapper */
+        .art-gallery-card {
+            background-color: #1A1816;
+            padding: 2.2rem;
+            border-radius: 4px;
+            border: 1px solid #2E2A26;
+            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.4);
             margin-bottom: 2rem;
-            box-shadow: 0 20px 40px -15px rgba(0,0,0,0.7);
+            position: relative;
         }
         
-        /* Gallery Card Container */
-        .gallery-card {
-            background: rgba(28, 25, 23, 0.6);
-            backdrop-filter: blur(12px);
-            padding: 1.8rem;
-            border-radius: 14px;
-            border: 1px solid rgba(245, 245, 244, 0.06);
-            box-shadow: 0 10px 30px rgba(0,0,0,0.4);
-            margin-bottom: 1.5rem;
+        /* Subtle aesthetic banner */
+        .art-header {
+            border-bottom: 1px solid #2E2A26;
+            padding-bottom: 1.5rem;
+            margin-bottom: 2rem;
         }
         
-        /* Inputs & Textareas artistic refinement */
+        /* Inputs & Textareas styled like a notebook/studio tool */
         .stTextInput > div > div > input, .stTextArea > div > div > textarea {
-            background-color: #1c1917 !important;
-            color: #f5f5f4 !important;
-            border: 1px solid #44403c !important;
-            border-radius: 8px !important;
+            background-color: #161412 !important;
+            color: #F4F1EA !important;
+            border: 1px solid #38332E !important;
+            border-radius: 3px !important;
+            padding: 12px !important;
         }
         
-        .stTextInput > div > div > input:focus, .stTextArea > div > div > textarea:focus {
-            border-color: #d97706 !important;
-            box-shadow: 0 0 0 1px #d97706 !important;
-        }
-        
-        /* Artistic button styling */
+        /* Artistic button styling - terracotta/gold accents */
         .stButton > button {
-            background: linear-gradient(135deg, #b45309 0%, #78350f 100%);
-            color: #ffffff;
-            border-radius: 8px;
-            border: 1px solid rgba(255,255,255,0.1);
-            padding: 0.6rem 1.2rem;
+            background-color: #C86D51;
+            color: #FFFFFF;
+            border-radius: 3px;
+            border: none;
+            padding: 0.7rem 1.5rem;
             font-weight: 500;
+            letter-spacing: 0.05em;
             width: 100%;
-            letter-spacing: 0.5px;
-            transition: all 0.3s ease;
+            transition: background 0.3s ease;
         }
         
         .stButton > button:hover {
-            background: linear-gradient(135deg, #d97706 0%, #b45309 100%);
-            border-color: rgba(255,255,255,0.2);
+            background-color: #B25A3F;
         }
         
-        /* File uploader artistic styling */
+        /* File uploader artistic frame */
         [data-testid="stFileUploadDropzone"] {
-            background-color: rgba(28, 25, 23, 0.4) !important;
-            border: 2px dashed #57534e !important;
-            border-radius: 12px !important;
+            background-color: #161412 !important;
+            border: 1px dashed #4D453E !important;
+            border-radius: 4px !important;
         }
         
-        /* Alerts styling */
+        /* Expander customization */
+        .streamlit-expanderHeader {
+            background-color: #1A1816 !important;
+            border: 1px solid #2E2A26 !important;
+            border-radius: 4px !important;
+        }
+        
+        /* Alerts */
         .stAlert {
-            background-color: #1c1917 !important;
-            color: #f5f5f4 !important;
-            border: 1px solid #44403c !important;
-            border-radius: 10px !important;
+            background-color: #1A1816 !important;
+            border: 1px solid #38332E !important;
+            border-radius: 4px !important;
+            color: #E6E2DD !important;
         }
     </style>
 """, unsafe_allow_html=True)
 
-# Artistic Page Header
+# App Title and presentation header (Artistic gallery layout)
 st.markdown("""
     <div class="art-header">
-        <h1 style="margin: 0; font-weight: 400; letter-spacing: 1px; color: #fafaf9;">ATELIER VISUAL 👁️✨</h1>
-        <p style="margin: 10px 0 0 0; color: #a8a29e; font-size: 1rem; letter-spacing: 0.5px;">Espacio experimental de crítica, deconstrucción y análisis estético de obra gráfica.</p>
+        <h1 style="letter-spacing: -0.02em; font-weight: 400; color: #F4F1EA; margin-bottom: 0.5rem;">🎨 GalleryCritique: Diagnóstico y Curaduría Gráfica</h1>
+        <p style='color: #9E968D; font-size: 1.05rem; margin: 0;'>Plataforma de análisis visual y evaluación conceptual para piezas de diseño y obras digitales.</p>
     </div>
 """, unsafe_allow_html=True)
 
-# Credentials container (Artistic style)
+# Credentials container
 with st.container():
-    st.markdown("##### 🔑 Llave de Acceso al Salón")
-    ke = st.text_input('Ingresa tu Clave', type="password", placeholder="Inserta credencial de OpenAI...")
+    st.markdown("#### 🔑 Credenciales de Acceso")
+    ke = st.text_input('Ingresa tu Clave', type="password", placeholder="sk-proj-...")
     os.environ['OPENAI_API_KEY'] = ke
 
 # Retrieve the OpenAI API Key from secrets
@@ -114,21 +112,21 @@ api_key = os.environ['OPENAI_API_KEY']
 # Initialize the OpenAI client with the API key
 client = OpenAI(api_key=api_key)
 
-st.markdown("---")
+st.markdown("<br>", unsafe_allow_html=True)
 
 # File uploader section
-st.markdown("##### 🖼️ Bastidor de Carga (Objeto Visual)")
+st.markdown("#### 🖼️ Repositorio de Piezas Gráficas")
 uploaded_file = st.file_uploader("Upload an image", type=["jpg", "png", "jpeg"])
 
 if uploaded_file:
-    # Display the uploaded image inside an artistic frame container
-    with st.expander("👁️ Exposición de la Pieza", expanded = True):
+    # Display the uploaded image inside an artistic canvas wrapper
+    with st.expander("👁️ Vista Previa de la Pieza", expanded = True):
         st.image(uploaded_file, caption=uploaded_file.name, use_container_width=True)
 
-st.markdown("---")
+st.markdown("<br>", unsafe_allow_html=True)
 
 # Configuration and context options
-st.markdown("##### ✍️ Criterios Curatoriales")
+st.markdown("#### ⚙️ Parámetros de Evaluación")
 show_details = st.toggle("Pregunta algo específico sobre la imagen", value=False)
 
 if show_details:
@@ -136,7 +134,7 @@ if show_details:
     additional_details = st.text_area(
         "Adiciona contexto de la imagen aqui:",
         disabled=not show_details,
-        placeholder="Ej: Reflexiona sobre la paleta cromática, el ritmo visual y la atmósfera emocional de esta pieza..."
+        placeholder="Ej: Analiza la composición tipográfica, el contraste cromático y el equilibrio simétrico..."
     )
 
 st.markdown("<br>", unsafe_allow_html=True)
@@ -147,7 +145,7 @@ analyze_button = st.button("Analiza la imagen", type="secondary")
 # Check if an image has been uploaded, if the API key is available, and if the button has been pressed
 if uploaded_file is not None and api_key and analyze_button:
 
-    with st.spinner("Contemplando y analizando la obra..."):
+    with st.spinner("Interpretando la obra y generando lectura crítica..."):
         # Encode the image
         base64_image = encode_image(uploaded_file)
     
@@ -179,7 +177,7 @@ if uploaded_file is not None and api_key and analyze_button:
             # Stream the response
             full_response = ""
             
-            st.markdown("##### 📜 Memoria Crítica y Lectura Estética:")
+            st.markdown("<br>### 📋 Dictamen y Análisis Crítico:", unsafe_allow_html=True)
             message_placeholder = st.empty()
             
             for completion in client.chat.completions.create(
