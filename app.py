@@ -7,7 +7,7 @@ from openai import OpenAI
 def encode_image(image_file):
     return base64.b64encode(image_file.getvalue()).decode("utf-8")
 
-# Streamlit page setup with centered layout
+# Streamlit page setup with wide layout for better visual cards
 st.set_page_config(
     page_title="GalleryCritique - Curador de Arte y Diseño", 
     page_icon="🎨", 
@@ -15,107 +15,64 @@ st.set_page_config(
     initial_sidebar_state="collapsed"
 )
 
-# Custom CSS for an artistic, editorial, and sophisticated aesthetic (NO font changes)
+# Custom CSS for aesthetics (organization, cards, color palette - NO font changes)
 st.markdown("""
     <style>
-        /* Main background with a subtle artistic mesh/gradient */
+        /* Main background & container styling */
         .stApp {
-            background: linear-gradient(135deg, #090d16 0%, #121826 50%, #1a1025 100%);
-            color: #f1f5f9;
+            background-color: #0F172A;
+            color: #F8FAFC;
         }
         
-        /* Artistic Header Hero Card */
-        .artistic-header {
-            background: linear-gradient(135deg, rgba(30, 41, 59, 0.7) 0%, rgba(88, 28, 135, 0.25) 100%);
-            padding: 2.5rem 2rem;
-            border-radius: 20px;
-            border: 1px solid rgba(236, 72, 153, 0.2);
-            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.4);
-            margin-bottom: 2rem;
-            position: relative;
-            overflow: hidden;
-        }
-        
-        .artistic-header::after {
-            content: "";
-            position: absolute;
-            top: -50px;
-            right: -50px;
-            width: 150px;
-            height: 150px;
-            background: radial-gradient(circle, rgba(236,72,153,0.15) 0%, rgba(0,0,0,0) 70%);
-            border-radius: 50%;
-        }
-
-        /* Floating glassmorphism cards for sections */
-        .glass-panel {
-            background: rgba(18, 24, 38, 0.65);
-            backdrop-filter: blur(12px);
+        /* Card container wrapper */
+        .art-card {
+            background-color: #1E293B;
             padding: 1.8rem;
-            border-radius: 16px;
-            border: 1px solid rgba(255, 255, 255, 0.07);
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            border-radius: 14px;
+            border: 1px solid #334155;
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.3);
             margin-bottom: 1.5rem;
         }
         
-        /* Custom inputs styling */
+        /* Inputs & Textareas enhancement */
         .stTextInput > div > div > input, .stTextArea > div > div > textarea {
-            background-color: #0b0f19 !important;
-            color: #f8fafc !important;
-            border: 1px solid #3b4252 !important;
-            border-radius: 10px !important;
-            padding: 12px !important;
+            background-color: #0F172A !important;
+            color: #F8FAFC !important;
+            border: 1px solid #475569 !important;
+            border-radius: 8px !important;
         }
         
-        /* File uploader artistic styling */
-        [data-testid="stFileUploadDropzone"] {
-            background-color: rgba(11, 15, 25, 0.5) !important;
-            border: 2px dashed rgba(236, 72, 153, 0.4) !important;
-            border-radius: 14px !important;
-        }
-        
-        /* Creative Gradient Button */
+        /* Primary button styling */
         .stButton > button {
-            background: linear-gradient(135deg, #db2777 0%, #7c3aed 100%) !important;
-            color: white !important;
-            border-radius: 12px !important;
-            border: none !important;
-            padding: 0.75rem 1.5rem !important;
-            font-weight: 600 !important;
+            background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+            color: white;
+            border-radius: 8px;
+            border: none;
+            padding: 0.6rem 1.2rem;
+            font-weight: 600;
             width: 100%;
-            box-shadow: 0 4px 15px rgba(219, 39, 119, 0.3);
-            transition: all 0.3s ease;
         }
         
         .stButton > button:hover {
-            opacity: 0.9;
-            transform: translateY(-1px);
-            box-shadow: 0 6px 20px rgba(124, 58, 237, 0.4);
+            background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
         }
         
-        /* Toggle & Expander polish */
-        .stExpander {
-            background-color: rgba(18, 24, 38, 0.5);
-            border: 1px solid rgba(255, 255, 255, 0.06);
-            border-radius: 12px;
+        /* Alerts & Warnings */
+        .stAlert {
+            border-radius: 10px;
         }
     </style>
 """, unsafe_allow_html=True)
 
-# Artistic Header Presentation
-st.markdown("""
-    <div class="artistic-header">
-        <h1 style="margin: 0; font-size: 2.2rem; color: #ffffff; letter-spacing: -0.5px;">Análisis de Imagen:🤖🏞️</h1>
-        <p style="margin: 8px 0 0 0; color: #cbd5e1; font-size: 1.05rem;">Plataforma de análisis visual y evaluación conceptual para piezas de diseño y obras digitales.</p>
-    </div>
-""", unsafe_allow_html=True)
+# App Title and presentation header
+st.title("🎨 GalleryCritique: Diagnóstico y Curaduría Gráfica")
+st.markdown("<p style='color: #94a3b8; margin-bottom: 2rem;'>Plataforma de análisis visual y evaluación conceptual para piezas de diseño y obras digitales.</p>", unsafe_allow_html=True)
 
-# Credentials container (Glassmorphic panel)
-st.markdown('<div class="glass-panel">', unsafe_allow_html=True)
-st.markdown("#### 🔑 Credenciales de Acceso")
-ke = st.text_input('Ingresa tu Clave', type="password", placeholder="sk-proj-...")
-os.environ['OPENAI_API_KEY'] = ke
-st.markdown('</div>', unsafe_allow_html=True)
+# Credentials container
+with st.container():
+    st.markdown("#### 🔑 Credenciales de Acceso")
+    ke = st.text_input('Ingresa tu Clave', type="password", placeholder="sk-proj-...")
+    os.environ['OPENAI_API_KEY'] = ke
 
 # Retrieve the OpenAI API Key from secrets
 api_key = os.environ['OPENAI_API_KEY']
@@ -123,19 +80,20 @@ api_key = os.environ['OPENAI_API_KEY']
 # Initialize the OpenAI client with the API key
 client = OpenAI(api_key=api_key)
 
-# File uploader section inside an artistic wrapper
-st.markdown('<div class="glass-panel">', unsafe_allow_html=True)
+st.markdown("---")
+
+# File uploader section
 st.markdown("#### 🖼️ Repositorio de Piezas Gráficas")
 uploaded_file = st.file_uploader("Upload an image", type=["jpg", "png", "jpeg"])
-st.markdown('</div>', unsafe_allow_html=True)
 
 if uploaded_file:
     # Display the uploaded image inside an organized aesthetic wrapper
     with st.expander("👁️ Vista Previa de la Pieza", expanded = True):
         st.image(uploaded_file, caption=uploaded_file.name, use_container_width=True)
 
-# Configuration and context options panel
-st.markdown('<div class="glass-panel">', unsafe_allow_html=True)
+st.markdown("---")
+
+# Configuration and context options
 st.markdown("#### ⚙️ Parámetros de Evaluación")
 show_details = st.toggle("Pregunta algo específico sobre la imagen", value=False)
 
@@ -146,7 +104,6 @@ if show_details:
         disabled=not show_details,
         placeholder="Ej: Analiza la composición tipográfica, el contraste cromático y el equilibrio simétrico..."
     )
-st.markdown('</div>', unsafe_allow_html=True)
 
 st.markdown("<br>", unsafe_allow_html=True)
 
@@ -188,10 +145,7 @@ if uploaded_file is not None and api_key and analyze_button:
             # Stream the response
             full_response = ""
             
-            st.markdown("<br>", unsafe_allow_html=True)
             st.markdown("### 📋 Dictamen y Análisis Crítico:")
-            
-            st.markdown('<div class="glass-panel" style="border-left: 4px solid #db2777;">', unsafe_allow_html=True)
             message_placeholder = st.empty()
             
             for completion in client.chat.completions.create(
@@ -204,7 +158,6 @@ if uploaded_file is not None and api_key and analyze_button:
                     message_placeholder.markdown(full_response + "▌")
             # Final update to placeholder after the stream ends
             message_placeholder.markdown(full_response)
-            st.markdown('</div>', unsafe_allow_html=True)
     
         except Exception as e:
             st.error(f"An error occurred: {e}")
