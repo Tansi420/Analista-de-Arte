@@ -7,71 +7,105 @@ from openai import OpenAI
 def encode_image(image_file):
     return base64.b64encode(image_file.getvalue()).decode("utf-8")
 
-# Streamlit page setup with wide layout for better visual cards
+# Streamlit page setup with centered artistic layout
 st.set_page_config(
-    page_title="GalleryCritique - Curador de Arte y Diseño", 
+    page_title="Atelier Visual | Curaduría y Análisis", 
     page_icon="🎨", 
     layout="centered", 
     initial_sidebar_state="collapsed"
 )
 
-# Custom CSS for aesthetics (organization, cards, color palette - NO font changes)
+# Custom CSS for an artistic, gallery-style aesthetic (NO font changes)
 st.markdown("""
     <style>
-        /* Main background & container styling */
+        /* Main dark artistic canvas background */
         .stApp {
-            background-color: #0F172A;
-            color: #F8FAFC;
+            background-color: #0c0a09;
+            color: #f5f5f4;
         }
         
-        /* Card container wrapper */
-        .art-card {
-            background-color: #1E293B;
+        /* Artistic Header Banner */
+        .art-header {
+            background: linear-gradient(145deg, #1c1917 0%, #0c0a09 100%);
+            padding: 2.5rem 2rem;
+            border-radius: 16px;
+            border: 1px solid rgba(245, 245, 244, 0.08);
+            text-align: center;
+            margin-bottom: 2rem;
+            box-shadow: 0 20px 40px -15px rgba(0,0,0,0.7);
+        }
+        
+        /* Gallery Card Container */
+        .gallery-card {
+            background: rgba(28, 25, 23, 0.6);
+            backdrop-filter: blur(12px);
             padding: 1.8rem;
             border-radius: 14px;
-            border: 1px solid #334155;
-            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(245, 245, 244, 0.06);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.4);
             margin-bottom: 1.5rem;
         }
         
-        /* Inputs & Textareas enhancement */
+        /* Inputs & Textareas artistic refinement */
         .stTextInput > div > div > input, .stTextArea > div > div > textarea {
-            background-color: #0F172A !important;
-            color: #F8FAFC !important;
-            border: 1px solid #475569 !important;
+            background-color: #1c1917 !important;
+            color: #f5f5f4 !important;
+            border: 1px solid #44403c !important;
             border-radius: 8px !important;
         }
         
-        /* Primary button styling */
+        .stTextInput > div > div > input:focus, .stTextArea > div > div > textarea:focus {
+            border-color: #d97706 !important;
+            box-shadow: 0 0 0 1px #d97706 !important;
+        }
+        
+        /* Artistic button styling */
         .stButton > button {
-            background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
-            color: white;
+            background: linear-gradient(135deg, #b45309 0%, #78350f 100%);
+            color: #ffffff;
             border-radius: 8px;
-            border: none;
+            border: 1px solid rgba(255,255,255,0.1);
             padding: 0.6rem 1.2rem;
-            font-weight: 600;
+            font-weight: 500;
             width: 100%;
+            letter-spacing: 0.5px;
+            transition: all 0.3s ease;
         }
         
         .stButton > button:hover {
-            background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
+            background: linear-gradient(135deg, #d97706 0%, #b45309 100%);
+            border-color: rgba(255,255,255,0.2);
         }
         
-        /* Alerts & Warnings */
+        /* File uploader artistic styling */
+        [data-testid="stFileUploadDropzone"] {
+            background-color: rgba(28, 25, 23, 0.4) !important;
+            border: 2px dashed #57534e !important;
+            border-radius: 12px !important;
+        }
+        
+        /* Alerts styling */
         .stAlert {
-            border-radius: 10px;
+            background-color: #1c1917 !important;
+            color: #f5f5f4 !important;
+            border: 1px solid #44403c !important;
+            border-radius: 10px !important;
         }
     </style>
 """, unsafe_allow_html=True)
 
-# App Title and presentation header
-st.title("🎨 GalleryCritique: Diagnóstico y Curaduría Gráfica")
-st.markdown("<p style='color: #94a3b8; margin-bottom: 2rem;'>Plataforma de análisis visual y evaluación conceptual para piezas de diseño y obras digitales.</p>", unsafe_allow_html=True)
+# Artistic Page Header
+st.markdown("""
+    <div class="art-header">
+        <h1 style="margin: 0; font-weight: 400; letter-spacing: 1px; color: #fafaf9;">ATELIER VISUAL 👁️✨</h1>
+        <p style="margin: 10px 0 0 0; color: #a8a29e; font-size: 1rem; letter-spacing: 0.5px;">Espacio experimental de crítica, deconstrucción y análisis estético de obra gráfica.</p>
+    </div>
+""", unsafe_allow_html=True)
 
-# Credentials container
+# Credentials container (Artistic style)
 with st.container():
-    st.markdown("#### 🔑 Credenciales de Acceso")
-    ke = st.text_input('Ingresa tu Clave', type="password", placeholder="sk-proj-...")
+    st.markdown("##### 🔑 Llave de Acceso al Salón")
+    ke = st.text_input('Ingresa tu Clave', type="password", placeholder="Inserta credencial de OpenAI...")
     os.environ['OPENAI_API_KEY'] = ke
 
 # Retrieve the OpenAI API Key from secrets
@@ -83,18 +117,18 @@ client = OpenAI(api_key=api_key)
 st.markdown("---")
 
 # File uploader section
-st.markdown("#### 🖼️ Repositorio de Piezas Gráficas")
+st.markdown("##### 🖼️ Bastidor de Carga (Objeto Visual)")
 uploaded_file = st.file_uploader("Upload an image", type=["jpg", "png", "jpeg"])
 
 if uploaded_file:
-    # Display the uploaded image inside an organized aesthetic wrapper
-    with st.expander("👁️ Vista Previa de la Pieza", expanded = True):
+    # Display the uploaded image inside an artistic frame container
+    with st.expander("👁️ Exposición de la Pieza", expanded = True):
         st.image(uploaded_file, caption=uploaded_file.name, use_container_width=True)
 
 st.markdown("---")
 
 # Configuration and context options
-st.markdown("#### ⚙️ Parámetros de Evaluación")
+st.markdown("##### ✍️ Criterios Curatoriales")
 show_details = st.toggle("Pregunta algo específico sobre la imagen", value=False)
 
 if show_details:
@@ -102,7 +136,7 @@ if show_details:
     additional_details = st.text_area(
         "Adiciona contexto de la imagen aqui:",
         disabled=not show_details,
-        placeholder="Ej: Analiza la composición tipográfica, el contraste cromático y el equilibrio simétrico..."
+        placeholder="Ej: Reflexiona sobre la paleta cromática, el ritmo visual y la atmósfera emocional de esta pieza..."
     )
 
 st.markdown("<br>", unsafe_allow_html=True)
@@ -113,7 +147,7 @@ analyze_button = st.button("Analiza la imagen", type="secondary")
 # Check if an image has been uploaded, if the API key is available, and if the button has been pressed
 if uploaded_file is not None and api_key and analyze_button:
 
-    with st.spinner("Analizando pieza gráfica en curso..."):
+    with st.spinner("Contemplando y analizando la obra..."):
         # Encode the image
         base64_image = encode_image(uploaded_file)
     
@@ -145,7 +179,7 @@ if uploaded_file is not None and api_key and analyze_button:
             # Stream the response
             full_response = ""
             
-            st.markdown("### 📋 Dictamen y Análisis Crítico:")
+            st.markdown("##### 📜 Memoria Crítica y Lectura Estética:")
             message_placeholder = st.empty()
             
             for completion in client.chat.completions.create(
